@@ -1,0 +1,38 @@
+# The image topics & calibration tops to listen to 
+left_cam : "/airsim_interface/left_camera_info"
+right_cam : "/airsim_interface/right_camera_info"
+left_img : "/airsim_interface/left_camera_img"
+right_img : "/airsim_interface/right_camera_img"
+
+# Approximate synch configurations
+img_sub_queue_size : 1
+calibration_sub_queue_size : 1
+img_pub_queue_size : 1
+calibration_pub_queue_size : 1
+# keep this as a default
+use_left_time : false
+img_synch_time : 10
+calibration_synch_time : 20
+
+# Names
+rig_name : "zed_camera"
+channel_name : "RGB"
+left_camera_name : "left"
+right_camera_name : "right"
+
+############################################################################
+
+# out_type=PROTO if you wish to serialize the proto msg robochunk::sensor_msgs::RigImages to disk (robochunk)
+# out_type=ROS if you wish to publish a sensor_msgs_robochunk::RigImages over ros
+out_type : ROS
+
+# If out_type==ROS then...
+img_topic : "/babel_PtR/processed_images"
+calibration_topic : "/babel/rig_calibration"
+
+# If out_type==PROTO then ...
+sensor_dir : "/front_xb3/processed_stereo_images"
+# specifies the location of where to write to disk
+path : "/media/katarina/Data1/ClearpathDecember/2016-12-14-vtr2-robochunk-dataset/run-1/21-54-53_rmd2/run_000000"
+# this specifies the chunk size
+chunk_size : 20
