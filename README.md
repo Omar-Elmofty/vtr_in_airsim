@@ -163,7 +163,7 @@ Copy and paste package to `airsim_vtr_interface` into new workspace
 cp -R ~/vtr_in_airsim/airsim_vtr_interface ~/airsim_interface/src
 ```
 
-Build worspace
+Build workspace
 ```
 cd ~/airsim_interface/
 catkin_make
@@ -176,7 +176,7 @@ Also, additional documentation on the custom gimbal stereo which is implemented 
 ## Prepare VT&R for AirSim <a name="SettingVTR"></a>
 
 
-Copy `stereo.yaml` available in this repo and paste in in the `babelfish_robochunk_translator` package. `stereo.yaml` contains all the correct names of all the rostopics published from the airsim interface. 
+Copy `stereo.yaml` available in this repo and paste in in the `babelfish_robochunk_translator` package. `stereo.yaml` contains all the correct names of all the ros topics published from the airsim interface. 
 
 ```
 cp ~/vtr_in_airsim/stereo.yaml ~/charlottetown/utiasASRL/vtr2/build/deps/robochunk_babelfish_generator/translator/robochunk/src/babelfish_robochunk_translator/param/ros_to_rig_images
@@ -199,12 +199,12 @@ Finally, you'll have to copy the `settings.json` file in this repo to your Docum
 cp ~/vtr_in_airsim/settings.json ~/Documents/AirSim
 ```
 
-The `settings.json` contains all the settings required by AirSim to load the drone and its sensors, the file you just copied contains basics needed to run vt&r, however a lot more customization could be applied to the drone. Check [AirSim Settings Documentation](https://microsoft.github.io/AirSim/settings/) for more details.
+The `settings.json` contains all the settings required by AirSim to load the drone and its sensors, the file you just copied contains basics needed to run VT&R, however a lot more customization could be applied to the drone. Check [AirSim Settings Documentation](https://microsoft.github.io/AirSim/settings/) for more details.
 
 ## Run VT&R in AirSim <a name="RunningVTR"></a>
 
 #### Step 1 - Load Environment:
-Load the Unreal environment by either double cliking the `.uproject` file, or by running it from command line as follows:
+Load the Unreal environment by either double clicking the `.uproject` file, or by running it from command line as follows:
 
 ```
 cd ~/UnrealEngine/Engine/Binaries/Linux/
@@ -218,7 +218,7 @@ Also, note that the display in the unreal editor is turned off, that is to help 
 Note: you could edit the there is `launch_environment.sh` script under `~/vtr_in_airsim/scripts/` and paste the above commands.
 
 #### Step 2 - Launch airsim ros wrapper:
-Load `airsim.yaml` using tmuxp. This will initate the ros wrapper, the stereo images publishers, the airsim gimbal controller, and the rqt image viewer.
+Load `airsim.yaml` using tmuxp. This will initiate the ros wrapper, the stereo images publishers, the airsim gimbal controller, and the rqt image viewer.
 
 ```
 cd ~/vtr_in_airsim/tmuxp
@@ -228,7 +228,7 @@ You should now see a window pop up with the live camera feed from airsim.
 
 #### Step 3 - Launch VT&R:
 
-Launch vt&r by running the following commands
+Launch VT&R by running the following commands
 
 ```
 cd ~/vtr_in_airsim/tmuxp
@@ -238,9 +238,9 @@ tmuxp load vtr2_m600_airsim.yaml
 The `vtr2_m600_airsim.yaml` is a slightly modified version of the `vtr2_m600_backyard.yaml` file.
 
 After the file is loaded you should see three panes
-* The left pane is running vt&r
+* The left pane is running VT&R
 * The top right pane is controlling the drone in airsim by running `./airsim_interface.sh`
-* The bottom right pane is for initiating learn or return by runnng `./learn.sh` or `./return.sh`
+* The bottom right pane is for initiating learn or return by running `./learn.sh` or `./return.sh`
 
 
 #### Step 4 - Teach:
@@ -266,7 +266,7 @@ Once the top right pane prints the message `Initiating Return Phase Control Loop
 ```
 ./return.sh
 ```
-Once the top right pane prings `Reached End, Hovering` this indicates the end of the repeat run.
+Once the top right pane prints `Reached End, Hovering` this indicates the end of the repeat run.
 
 
 ## Reference Material <a name="Reference"></a>
