@@ -109,7 +109,7 @@ export PATH=/opt/cmake-3.17.2-Linux-x86_64/bin:$PATH
 export CMAKE_PREFIX_PATH=/opt/cmake-3.17.2-Linux-x86_64:$CMAKE_PREFIX_PATH
 ```
 
-#### Install tft sensor and mavros
+#### Install tf2 sensor and mavros
 Finally, you'll also need tf2 sensor and mavros packages, install them using the below command:
 
 `sudo apt-get install ros-kinetic-tf2-sensor-msgs ros-kinetic-mavros*`
@@ -137,9 +137,9 @@ The different Functions available in the python Client for use can be found in `
 
 Different Examples of the python client usage can be found in `~/Airsim_Forked/PythonClient/multirotor`
 
-## Setup Unreal Enviroment <a name="SettingEnv"></a>
+## Setup Unreal Environment <a name="SettingEnv"></a>
 
-You can setup an enviroment by downloading it from Epic Launcher and following the instructions in this video [link](https://www.youtube.com/watch?v=1oY8Qu5maQQ&t=305s). You will need Unreal Engine to be installed on a windows machine though, and the files will have to be transfered
+You can setup an environment by downloading it from Epic Launcher and following the instructions in this video [link](https://www.youtube.com/watch?v=1oY8Qu5maQQ&t=305s). You will need Unreal Engine to be installed on a windows machine though, and the files will have to be transfered
 
 ## Install AirSim Interface <a name="AirSimInterface"></a>
 
@@ -203,8 +203,8 @@ The `settings.json` contains all the settings required by AirSim to load the dro
 
 ## Run VT&R in AirSim <a name="RunningVTR"></a>
 
-#### Step 1 - Load Enviroment:
-Load the Unreal enviroment by either double cliking the `.uproject` file, or by running it from command line as follows:
+#### Step 1 - Load Environment:
+Load the Unreal environment by either double cliking the `.uproject` file, or by running it from command line as follows:
 
 ```
 cd ~/UnrealEngine/Engine/Binaries/Linux/
@@ -215,7 +215,7 @@ Once the Unreal Editor opens, click the **Play** button on the top bar of the Ed
 
 Also, note that the display in the unreal editor is turned off, that is to help decrease the computational load, and hence increase the camera publishing frequency from airsim. The live feed from the camera will be displayed using `rqt_image_view` package later on. To turn on display again, you could change the ViewMode in `settings.json`, check the airsim documentation for more details.
 
-Note: you could edit the there is `launch_enviroment.sh` script under `~/vtr_in_airsim/scripts/` and paste the above commands.
+Note: you could edit the there is `launch_environment.sh` script under `~/vtr_in_airsim/scripts/` and paste the above commands.
 
 #### Step 2 - Launch airsim ros wrapper:
 Load `airsim.yaml` using tmuxp. This will initate the ros wrapper, the stereo images publishers, the airsim gimbal controller, and the rqt image viewer.
