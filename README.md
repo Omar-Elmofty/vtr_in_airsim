@@ -4,15 +4,30 @@
 This repository is home for the required packages and instructions to run VT&R in AirSim
 
 **Top-level Contents**
+* [Repository Contents](#RepoContents)
 * [Install Unreal Engine](#UnrealEngine)
 * [Install AirSim](#InstallAirSim)
 * [Install AirSim ROS Wrapper](#InstallRos)
 * [Setup Python Client](#SettingPython)
-* [Setup Unreal Enviroment](#SettingEnv)
+* [Setup Unreal Environment](#SettingEnv)
 * [Install AirSim Interface](#AirSimInterface)
 * [Prepare VT&R for AirSim](#SettingVTR)
 * [Run VT&R in AirSim](#RunningVTR)
 * [Reference Material](#Reference)
+
+
+## Repository Contents <a name="RepoContents"></a>
+
+This is a high-level overview of all the contents of this repository
+
+* Plugins    *a backup version of the Plugins folder with M600 Implementation folder required to run airsim with Unreal editor*
+* airsim_vtr_interface *a catkin package for interfacing airsim with VT&R*
+* scripts  *contains some useful bash scripts*
+* tmuxp  *contains the yaml files required for running VT&R with airsim*
+* Airsim_Changes.md  *a document containing all the changes made to airsim's master branch to implement the DJI M600 in it*
+* AirSim_Stereo_Gimbal.md *a document containing all the details regarding the custom stereo gimbal*
+* settings.json *the required airsim settings file for running VT&R*
+* stereo.yaml  *the required parameter file for babelfish_robochunk_translator to accept the airsim topics*
 
 ## Install Unreal Engine <a name="UnrealEngine"></a>
 
@@ -53,11 +68,12 @@ cd AirSim
 ./setup.sh
 ./build.sh
 ```
-Once Airsim is built, a "Plugins" Folder will be created under `~/AirSim/Unreal`, this folder will be later attached to unreal projects in order to run Airsim with Unreal editor.
+Once Airsim is built, a "Plugins" Folder will be created under `~/AirSim/Unreal`, this folder will be later attached to unreal projects in order to run Airsim with Unreal editor. Note that a backup version of the "Plugins" folder is attached to this repo.
 
 
 ## Install AirSim ROS Wrapper <a name="InstallRos"></a>
 
+#### Upgrade gcc
 You'll need gcc >= 8.0.0, check the version of gcc using `gcc --version`. Run the following commands to install gcc 8 if you don't have it:
 ```
 sudo apt-get install gcc-8 g++-8
@@ -69,6 +85,7 @@ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install gcc-8 g++-8
 ```
+#### Upgrade CMake
 You'll also need C-make >= 3.10.0, which is not installed by default with VT&R
 
 To install the latest C-make version follow the below instructions
@@ -92,13 +109,14 @@ export PATH=/opt/cmake-3.17.2-Linux-x86_64/bin:$PATH
 export CMAKE_PREFIX_PATH=/opt/cmake-3.17.2-Linux-x86_64:$CMAKE_PREFIX_PATH
 ```
 
+#### Install tft sensor and mavros
 Finally, you'll also need tf2 sensor and mavros packages, install them using the below command:
 
 `sudo apt-get install ros-kinetic-tf2-sensor-msgs ros-kinetic-mavros*`
 
+#### Build ROS Wrapper
 
 To build Ros Wrapper
-
 Open a new terminal, export the cmake paths if you need to, then build ros package
 
 ```
@@ -220,7 +238,7 @@ tmuxp load vtr2_m600_airsim.yaml
 The `vtr2_m600_airsim.yaml` is a slightly modified version of the `vtr2_m600_backyard.yaml` file.
 
 After the file is loaded you should see three panes
-* The left pane is running vt&R
+* The left pane is running vt&r
 * The top right pane is controlling the drone in airsim by running `./airsim_interface.sh`
 * The bottom right pane is for initiating learn or return by runnng `./learn.sh` or `./return.sh`
 
@@ -254,8 +272,13 @@ Once the top right pane prings `Reached End, Hovering` this indicates the end of
 ## Reference Material <a name="Reference"></a>
 
 [Official AirSim Documentation](https://microsoft.github.io/AirSim)
+
 [AirSim Installation Instructions for Linux](https://microsoft.github.io/AirSim/build_linux/)
+
 [AirSim ROS Wrapper Documentation](https://microsoft.github.io/AirSim/airsim_ros_pkgs/)
+
 [AirSim Settings Documentation](https://microsoft.github.io/AirSim/settings/)
+
 [Great AirSim Guide Created by Jacopo Panerati Part1](https://github.com/JacopoPan/a-minimalist-guide/blob/master/Part3-Using-AirSim.md)
+
 [Great AirSim Guide Created by Jacopo Panerati Part2](https://github.com/JacopoPan/a-minimalist-guide/blob/master/Part4-Modifying-AirSim.md)
