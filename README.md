@@ -20,14 +20,14 @@ This repository is home for the required packages and instructions to run VT&R i
 
 This is a high-level overview of all the contents of this repository
 
-* Plugins    *a backup version of the Plugins folder with M600 Implementation folder required to run airsim with Unreal editor*
-* airsim_vtr_interface *a catkin package for interfacing airsim with VT&R*
-* scripts  *contains some useful bash scripts*
-* tmuxp  *contains the yaml files required for running VT&R with airsim*
-* Airsim_Changes.md  *a document containing all the changes made to airsim's master branch to implement the DJI M600 in it*
-* AirSim_Stereo_Gimbal.md *a document containing all the details regarding the custom stereo gimbal*
-* settings.json *the required airsim settings file for running VT&R*
-* stereo.yaml  *the required parameter file for babelfish_robochunk_translator to accept the airsim topics*
+* `Plugins`  *a backup version of the Plugins folder with M600 Implementation folder required to run airsim with Unreal editor*
+* `airsim_vtr_interface` *a catkin package for interfacing airsim with VT&R*
+* `scripts`  *contains some useful bash scripts*
+* `tmuxp`  *contains the yaml files required for running VT&R with airsim*
+* `Airsim_Changes.md`  *a document containing all the changes made to airsim's master branch to implement the DJI M600 in it*
+* `AirSim_Stereo_Gimbal.md` *a document containing all the details regarding the custom stereo gimbal*
+* `settings.json` *the required airsim settings file for running VT&R*
+* `stereo.yaml`  *the required parameter file for babelfish_robochunk_translator to accept the airsim topics*
 
 ## Install Unreal Engine <a name="UnrealEngine"></a>
 
