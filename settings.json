@@ -1,0 +1,59 @@
+{
+  "SeeDocsAt": "https://github.com/Microsoft/AirSim/blob/master/docs/settings.md",
+  "SettingsVersion": 1.2,
+  "SimMode": "Multirotor",
+  "ViewMode": "NoDisplay",
+  "ClockSpeed": 0.25,
+  "ClockType": "ScalableClock",
+  "Vehicles": {
+    "drone": {
+      "VehicleType": "SimpleFlight",
+      "Model": "Hexacopter",
+      "DefaultVehicleState": "Armed",
+      "EnableCollisionPassthrogh": false,
+      "EnableCollisions": true,
+      "AllowAPIAlways": true,
+      "Cameras": {  
+        "front_left_custom": {
+          "CaptureSettings": [
+            {
+              "PublishToRos": 1,
+              "ImageType": 0,
+              "Width": 672,
+              "Height": 376,
+              "FOV_Degrees": 90,
+              "TargetGamma": 1.5
+            }
+          ],
+          "Gimbal": {
+            "Stabilization": 0,
+            "Pitch": -30, "Roll": 0, "Yaw": 0
+          },
+          "X": 0, "Y": -0.06, "Z": 0.2,
+          "Pitch": -30, "Roll": 0, "Yaw": 0
+        },
+        "front_right_custom": {
+          "CaptureSettings": [
+            {
+              "PublishToRos": 1,
+              "ImageType": 0,
+              "Width": 672,
+              "Height": 376,
+              "FOV_Degrees": 90,
+              "TargetGamma": 1.5
+            }	
+          ],
+          "Gimbal": {
+            "PublishToRos": 1,
+            "Stabilization": 0,
+            "Pitch": -30, "Roll": 0, "Yaw": 0
+          },
+          "X": 0, "Y": 0.06, "Z": 0.2,
+          "Pitch": -30, "Roll": 0, "Yaw": 0
+        }	
+      },
+      "X": 0, "Y": 0, "Z": 0,
+      "Pitch": 0, "Roll": 0, "Yaw": 0
+    }
+  }
+}

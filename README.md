@@ -142,7 +142,7 @@ catkin_make
 
 Copy and paste package to `airsim_vtr_interface` into new workspace
 ```
-cp ~/vtr_in_airsim/airsim_vtr_interface ~/airsim_interface/src
+cp -R ~/vtr_in_airsim/airsim_vtr_interface ~/airsim_interface/src
 ```
 
 Build worspace
@@ -158,15 +158,16 @@ Also, additional documentation on the custom gimbal stereo which is implemented 
 ## Prepare VT&R for AirSim <a name="SettingVTR"></a>
 
 
-Copy `stereo.yaml` available in this repo and paste in:
+Copy `stereo.yaml` available in this repo and paste in in the `babelfish_robochunk_translator` package. `stereo.yaml` contains all the correct names of all the rostopics published from the airsim interface. 
 
 ```
-~/charlottetown/utiasASRL/vtr2/build/deps/robochunk_babelfish_generator/translator/robochunk/src/babelfish_robochunk_translator/param/ros_to_rig_images
+cp ~/vtr_in_airsim/stereo.yaml ~/charlottetown/utiasASRL/vtr2/build/deps/robochunk_babelfish_generator/translator/robochunk/src/babelfish_robochunk_translator/param/ros_to_rig_images
 ```
 
-Open `m600_backyard.yaml` located in the below directory
 
-`~/charlottetown/utiasASRL/vtr2/src/asrl__navigation/param/scenarios`
+Open `m600_backyard.yaml` 
+
+`gedit ~/charlottetown/utiasASRL/vtr2/src/asrl__navigation/param/scenarios/m600_backyard.yaml`
 
 Ensure you are using gray-scale images, as follows:
 
@@ -175,9 +176,80 @@ converter/extraction/conversions: ["RGB_TO_GRAYSCALE"]
 converter/extraction/extractor/channels: ["grayscale"]
 ```
 
+Finally, you'll have to copy the `settings.json` file in this repo to your Documents folder 
+```
+cp ~/vtr_in_airsim/settings.json ~/Documents/AirSim
+```
+
+The `settings.json` contains all the settings required by AirSim to load the drone and its sensors, the file you just copied contains basics needed to run vt&r, however a lot more customization could be applied to the drone. Check [AirSim Settings Documentation](https://microsoft.github.io/AirSim/settings/) for more details.
+
 ## Run VT&R in AirSim <a name="RunningVTR"></a>
 
-Open the enviroment you would like to start and 
+#### Step 1 - Load Enviroment:
+Load the Unreal enviroment by either double cliking the `.uproject` file, or by running it from command line as follows:
+
+```
+cd ~/UnrealEngine/Engine/Binaries/Linux/
+./UE4Editor PATH_TO_PROJECT/PROJECT_NAME.uproject 
+
+```
+Once the Unreal Editor opens, click the **Play** button on the top bar of the Editor (should like music play button). Confirm that you are not receiving any errors in the editor, errors will be highlighted in red.
+
+Also, note that the display in the unreal editor is turned off, that is to help decrease the computational load, and hence increase the camera publishing frequency from airsim. The live feed from the camera will be displayed using `rqt_image_view` package later on. To turn on display again, you could change the ViewMode in `settings.json`, check the airsim documentation for more details.
+
+Note: you could edit the there is `launch_enviroment.sh` script under `~/vtr_in_airsim/scripts/` and paste the above commands.
+
+#### Step 2 - Launch airsim ros wrapper:
+Load `airsim.yaml` using tmuxp. This will initate the ros wrapper, the stereo images publishers, the airsim gimbal controller, and the rqt image viewer.
+
+```
+cd ~/vtr_in_airsim/tmuxp
+tmuxp load airsim.yaml
+```
+You should now see a window pop up with the live camera feed from airsim.
+
+#### Step 3 - Launch VT&R:
+
+Launch vt&r by running the following commands
+
+```
+cd ~/vtr_in_airsim/tmuxp
+tmuxp load vtr2_m600_airsim.yaml
+```
+
+The `vtr2_m600_airsim.yaml` is a slightly modified version of the `vtr2_m600_backyard.yaml` file.
+
+After the file is loaded you should see three panes
+* The left pane is running vt&R
+* The top right pane is controlling the drone in airsim by running `./airsim_interface.sh`
+* The bottom right pane is for initiating learn or return by runnng `./learn.sh` or `./return.sh`
+
+
+#### Step 4 - Teach:
+
+Start the teach pass, first you'll have to start moving the drone. Navigate to the top right pane as described in step 3, and run the following command:
+
+```
+./airsim_interface.sh
+```
+
+The drone now should take off vertically first, then start moving in the horizontal plane in an arc
+
+After the drone finishes taking off, you can start the teach phase by navigating to the bottom right pane, and running the following
+
+```
+./learn.sh
+```
+
+#### Step 5 - Repeat:
+ 
+Once the top right pane prints the message `Initiating Return Phase Control Loop`, you could then start the return phase by running the following in the bottom right pane:
+
+```
+./return.sh
+```
+Once the top right pane prings `Reached End, Hovering` this indicates the end of the repeat run.
+
 
 ## Reference Material <a name="Reference"></a>
 

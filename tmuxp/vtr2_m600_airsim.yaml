@@ -1,0 +1,66 @@
+# The tmux session name, has to be unique
+session_name: vtr2
+
+# Hard-coded ros IPs
+environment:
+  ROS_IP: 127.0.0.1
+  ROS_MASTER_URI: http://127.0.0.1:11311
+  #ROS_IP: 192.168.1.3
+  #ROS_MASTER_URI: http://192.168.1.3:11311
+  #ROS_IP: 192.168.42.191
+  #ROS_MASTER_URI: http://192.168.42.191:11311
+  #ROS_IP: 100.64.21.133
+  #ROS_MASTER_URI: http://100.64.21.133:11311
+  PRIORITIZE: nice -n -5 ionice -c 2 -n 1
+  VTR2_DATA_DIR: /mnt/msata/data/ASRL/backyard
+
+# Can run a script before tmuxp starts building the session
+# before_script: /my/startup/script
+
+# The default start directory for the full session, ./ is this file's location
+start_directory: ./../../../
+
+# Add commands to bash history
+suppress_history: false
+
+# This is where we list all the stuff we want to run
+windows:
+- window_name: ros
+  layout: main-vertical
+  panes:
+  - roscore
+  - sleep 1; watch -n 1 rostopic list
+  #delete graph saved in workspace (temporary - for testing only)
+  - cd ~/workspace/test/online_test; rm -r *
+  
+  #- # For running the robochunk logger
+- window_name: dji
+  layout: main-horizontal
+  panes:
+  # dji_sdk not used with airsim
+  #- sleep 2; roslaunch dji_sdk sdk.launch
+  - sleep 4; roslaunch asrl__dji m600_utias_description.launch
+  - sleep 6; roslaunch asrl__dji m600.launch
+
+- window_name: robochunk_and_pt
+  layout: main-horizontal
+  #start_directory: ./build/deps
+  panes:
+  - rosrun robochunk_logger robochunklogger server
+  # Zed Camera driver is not needed with Airsim
+  #- sleep 2; DISPLAY=:0.0 rosrun robochunk_zed ZedDriver ~/charlottetown/utiasASRL/vtr2/src/deps/catkin/robochunk/robochunk_sensors/configurations/configuration_zed.xml
+  - sleep 4; roslaunch babelfish_robochunk_translator translator.launch translator_type:=ros_to_rig
+  #- rosrun robochunk_logger robochunk_logger_gui
+  # Setup path tracker and launch safety monitor
+  - sleep 2; roslaunch asrl__navigation vtr2_pt.launch
+  
+- window_name: vtr2
+  layout: main-vertical
+  options:
+    other-pane-width: 80
+  panes:
+  - sleep 6; roslaunch asrl__navigation vtr2_m600_slim.launch robot:=m600 scenario_params:=m600_backyard planner_type:=distance location:=utias
+  - cd ~/vtr_in_airsim/scripts #empty window for controlling drone in airsim
+  - roscd asrl__navigation; cd scripts # Empty window to start and stop robochunk logger i.e. rosrun robochunk_logger robochunklogger start, rosrun robochunk_logger robochunklogger stop
+  #- sudo ~/jetson_clocks.sh; sudo service chrony restart; watch chronyc tracking
+
