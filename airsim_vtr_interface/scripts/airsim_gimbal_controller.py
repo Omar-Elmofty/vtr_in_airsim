@@ -201,8 +201,8 @@ class GimbalPub(object):
 			#Publish gimbal state add vehicle pitch and roll to simulate ronin gimbal output
 			gimbal_angle_msg = Vector3Stamped()
 			gimbal_angle_msg.vector.z = -self.yaw*180/np.pi
-			gimbal_angle_msg.vector.y = self.roll*180/np.pi + vehicle_roll
-			gimbal_angle_msg.vector.x = -self.pitch*180/np.pi + vehicle_pitch
+			gimbal_angle_msg.vector.y = (self.roll + vehicle_roll)*180/np.pi
+			gimbal_angle_msg.vector.x = (-self.pitch + vehicle_pitch)*180/np.pi
 
 			self.gimbal_angle_pub.publish(gimbal_angle_msg)
 
