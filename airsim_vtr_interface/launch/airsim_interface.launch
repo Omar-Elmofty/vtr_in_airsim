@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Launch file for airsim interface-->
+<!-- Omar Elmofty - omar.elmofty@mail.utoronto.ca
+-->
+
+<launch>
+
+  <!-- Ros node for publishing airsim images -->
+  <node name="airsim_stereo_publisher" pkg="airsim_vtr_interface" 
+    type="airsim_stereo_publisher.py" output="screen" required="True">
+    <param name="gimbal_angle_speed" value="0.06"/> <!-- speed of gimbal joints in rad/s -->
+    <param name="gimbal_angle_thres" value="0.02"/> <!-- closeness threshold for cmd vs actual gimbal angles -->
+  </node>
+
+  <!-- Ros node for stereo gimbal controller -->
+  <node name="gimbal_pub" pkg="airsim_vtr_interface" 
+    type="airsim_gimbal_controller.py" output="screen" required="True"/>
+
+</launch>

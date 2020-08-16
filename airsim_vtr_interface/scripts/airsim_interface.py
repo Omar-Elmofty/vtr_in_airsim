@@ -18,6 +18,7 @@ from std_msgs.msg import UInt8
 from sensor_msgs.msg import Joy
 from asrl__messages.msg import TrackingStatus
 from dji_osdk_ros.srv import SDKControlAuthority, SDKControlAuthorityResponse
+from dji_osdk_ros.msg import Gimbal
 
 
 class AirsimInterface(object):
@@ -40,6 +41,11 @@ class AirsimInterface(object):
 		#Simulate Display mode setting for M600
 		self.display_mode_pub = rospy.Publisher('/dji_sdk/display_mode', 
 													UInt8, queue_size=30)
+
+		#Publish to gimbal angle cmd topic
+		self.gimbal_cmd_pub = rospy.Publisher('/dji_sdk/gimbal_angle_cmd', 
+										Gimbal, queue_size=30)
+
 
 		# connect to the AirSim simulator
 		self.client = airsim.MultirotorClient()
@@ -160,14 +166,39 @@ class AirsimInterface(object):
 		rospy.sleep(15)
 
 
+	def publish_gimbal_cmd(self,pitch, roll, yaw):
+		"""Function that publishes gimbal angles to the custom stereo gimbal
+		"""
+		msg = Gimbal()
+		msg.pitch = pitch
+		msg.roll = roll
+		msg.yaw = yaw
+		self.gimbal_cmd_pub.publish(msg)
+
+
 	def move_drone_position(self, x, y, z, speed):
 		"""Move drone to certain position before commanding it
 		Position is defined in the NED frame
 		"""
 		self.client.moveToPositionAsync(x, y, z, speed, vehicle_name="drone")
 
+	def move_straightline(self):
+		"""Function that moves commands the drone and moves it in a straight 
+		line and moves gimbal as well. The frame of reference used is NED
+		"""
+		vx = 1.0
+		t = 10
 
-	def move_drone_velocity(self):
+		#move gimbal in the pitch and yaw directions
+		for i in range(1,50,1):
+			self.client.moveByVelocityAsync(vx, 0, 0, 0.5)
+			rospy.sleep(0.5)
+			self.publish_gimbal_cmd(-0.34-i/2/100., 0, i/100.)
+			rospy.sleep(0.5)
+			
+
+		
+	def move_arc(self):
 		"""Function that moves commands the drone and moves it in an arc
 		The frame of reference used is NED
 		"""
@@ -236,7 +267,7 @@ class AirsimInterface(object):
 	def run_vtr(self):
 		self.takoff()
 		#Teach phase: Move according to mission plan (arc in this case)
-		self.move_drone_velocity()
+		self.move_arc()
 		#Repeat phase: Move according to controls from vt&r
 		self.return_follow()
 

@@ -6,7 +6,7 @@ windows:
   layout: main-horizontal
   panes:
   - source ~/AirSim/ros/devel/setup.bash; roslaunch airsim_ros_pkgs airsim_node.launch
-  - sleep 5; source ~/airsim_interface/devel/setup.bash; rosrun airsim_vtr_interface airsim_stereo_publisher.py
+  - sleep 5; source ~/airsim_interface/devel/setup.bash; roslaunch airsim_vtr_interface airsim_interface.launch
   - sleep 2; rosrun rqt_image_view rqt_image_view 
-  - sleep 5; source ~/airsim_interface/devel/setup.bash; rosrun airsim_vtr_interface airsim_gimbal_controller.py
+  #- sleep 5; source ~/airsim_interface/devel/setup.bash; rosrun airsim_vtr_interface airsim_gimbal_controller.py
   

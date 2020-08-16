@@ -32,6 +32,11 @@ class GimbalPub(object):
 		self.gimbal_cmd_sub = rospy.Subscriber('/dji_sdk/gimbal_angle_cmd', 
 										Gimbal, self.gimbal_angle_cmd_cb)
 
+		#in rads, closeness threhold between cmd and actual
+		self.angle_threshold = rospy.get_param('~gimbal_angle_thres')
+		#gimbal motion speed in rad/s
+		self.angle_speed = rospy.get_param('~gimbal_angle_speed')
+
 		# connect to the AirSim simulator
 		self.client = airsim.MultirotorClient()
 		self.client.confirmConnection()
@@ -47,10 +52,6 @@ class GimbalPub(object):
 		self.pitch_cmd = 0.52
 		self.roll_cmd = 0.0
 		self.yaw_cmd = 0.0
-
-		#Angle Tolerance and speed
-		self.angle_threshold = 0.02 #in rads, closeness threhold between cmd and actual
-		self.angle_speed = 3.5 * np.pi/180.0 #gimbal motion speed in rad/s
 
 		#All fixed transforms for ronin gimbal
 		self.T_leftcamFRD_sensorFRD = np.identity(4)
