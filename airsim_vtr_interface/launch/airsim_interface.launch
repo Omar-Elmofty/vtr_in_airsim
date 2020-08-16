@@ -8,13 +8,13 @@
 
   <!-- Ros node for publishing airsim images -->
   <node name="airsim_stereo_publisher" pkg="airsim_vtr_interface" 
-    type="airsim_stereo_publisher.py" output="screen" required="True">
-    <param name="gimbal_angle_speed" value="0.06"/> <!-- speed of gimbal joints in rad/s -->
-    <param name="gimbal_angle_thres" value="0.02"/> <!-- closeness threshold for cmd vs actual gimbal angles -->
-  </node>
+    type="airsim_stereo_publisher.py" output="screen" required="True" />
 
   <!-- Ros node for stereo gimbal controller -->
   <node name="gimbal_pub" pkg="airsim_vtr_interface" 
-    type="airsim_gimbal_controller.py" output="screen" required="True"/>
+    type="airsim_gimbal_controller.py" output="screen" required="True">
+    <param name="/gimbal_angle_speed" type="double" value="0.06"/> <!-- speed of gimbal joints in rad/s -->
+    <param name="/gimbal_angle_thres" type="double" value="0.02"/> <!-- closeness threshold for cmd vs actual gimbal angles -->
+  </node>
 
 </launch>

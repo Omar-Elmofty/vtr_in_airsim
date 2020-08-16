@@ -33,9 +33,9 @@ class GimbalPub(object):
 										Gimbal, self.gimbal_angle_cmd_cb)
 
 		#in rads, closeness threhold between cmd and actual
-		self.angle_threshold = rospy.get_param('~gimbal_angle_thres')
+		self.angle_threshold = rospy.get_param("/gimbal_pub/gimbal_angle_thres")
 		#gimbal motion speed in rad/s
-		self.angle_speed = rospy.get_param('~gimbal_angle_speed')
+		self.angle_speed = rospy.get_param("/gimbal_pub/gimbal_angle_speed")
 
 		# connect to the AirSim simulator
 		self.client = airsim.MultirotorClient()
@@ -129,6 +129,7 @@ class GimbalPub(object):
 	def gimbal_controller(self):
 		"""Function for controlling gimbal in airsim
 		"""
+
 		#Control update rate
 		Freq = 10
 		rate = rospy.Rate(Freq)
