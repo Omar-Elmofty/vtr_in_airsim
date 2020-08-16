@@ -119,6 +119,11 @@ class GimbalPub(object):
 		msg.quaternion.w = q_NWU_FLU[3]
 		self.vehicle_attitude_pub.publish(msg)
 
+		#get euler angles
+		euler_angles = tf.transformations.euler_from_matrix(R_NWU_FLU,'ryxz')
+
+		return euler_angles[0], euler_angles[1], euler_angles[2]
+
 
 	def gimbal_controller(self):
 		"""Function for controlling gimbal in airsim
@@ -160,9 +165,13 @@ class GimbalPub(object):
 								   [0,0,0,1]])
 			
 			#Calculate camera poses relative to control frame
-			T_sensorFRD_ctrlFRD = self.T_rot.dot(self.T_link_control).dot(T_yaw_link).dot(T_roll_yaw).dot(T_pitch_roll).dot(self.T_sensor_pitch).dot(self.T_rot)
-			T_leftcamFRD_ctrlFRD = T_sensorFRD_ctrlFRD.dot(self.T_leftcamFRD_sensorFRD)
-			T_rightcamFRD_ctrlFRD = T_sensorFRD_ctrlFRD.dot(self.T_rightcamFRD_sensorFRD)
+			T_sensorFRD_ctrlFRD = self.T_rot.dot(self.T_link_control) \
+					.dot(T_yaw_link).dot(T_roll_yaw).dot(T_pitch_roll) \
+					.dot(self.T_sensor_pitch).dot(self.T_rot)
+			T_leftcamFRD_ctrlFRD = T_sensorFRD_ctrlFRD \
+									.dot(self.T_leftcamFRD_sensorFRD)
+			T_rightcamFRD_ctrlFRD = T_sensorFRD_ctrlFRD \
+									.dot(self.T_rightcamFRD_sensorFRD)
 
 			#Convert rotations to euler
 			left_euler = tf.transformations.euler_from_matrix(T_leftcamFRD_ctrlFRD,'ryxz')
@@ -171,20 +180,33 @@ class GimbalPub(object):
 			right_trans = T_rightcamFRD_ctrlFRD[0:3,3]
 
 			#Send camera poses to airsim
-			camera_pose = airsim.Pose(airsim.Vector3r(left_trans[0], left_trans[1], left_trans[2]), airsim.to_quaternion(left_euler[0],left_euler[1] , left_euler[2]))
+			camera_pose = airsim.Pose(airsim.Vector3r(left_trans[0], 
+													left_trans[1],
+													left_trans[2]),
+											airsim.to_quaternion(left_euler[0],
+																left_euler[1] , 
+																left_euler[2]))
 			self.client.simSetCameraPose("front_left_custom", camera_pose)
-			camera_pose = airsim.Pose(airsim.Vector3r(right_trans[0], right_trans[1], right_trans[2]), airsim.to_quaternion(right_euler[0],right_euler[1] , right_euler[2]))
+			camera_pose = airsim.Pose(airsim.Vector3r(right_trans[0], 
+													right_trans[1],
+													right_trans[2]), 
+											airsim.to_quaternion(right_euler[0],
+																right_euler[1] , 
+																right_euler[2]))
 			self.client.simSetCameraPose("front_right_custom", camera_pose)
 
-			#Publish gimbal state
+			#publish vehicle attitude
+			vehicle_roll, vehicle_pitch, vehicle_yaw = self.publish_vehicle_attitude()
+
+			#Publish gimbal state add vehicle pitch and roll to simulate ronin gimbal output
 			gimbal_angle_msg = Vector3Stamped()
-			gimbal_angle_msg.vector.z = self.yaw*180/np.pi
-			gimbal_angle_msg.vector.y = self.pitch*180/np.pi
-			gimbal_angle_msg.vector.x = self.roll*180/np.pi
+			gimbal_angle_msg.vector.z = -self.yaw*180/np.pi
+			gimbal_angle_msg.vector.y = self.roll*180/np.pi + vehicle_roll
+			gimbal_angle_msg.vector.x = -self.pitch*180/np.pi + vehicle_pitch
+
 			self.gimbal_angle_pub.publish(gimbal_angle_msg)
 
-			#publish vehicle attitude
-			self.publish_vehicle_attitude()
+			
 
 			rate.sleep()
 
