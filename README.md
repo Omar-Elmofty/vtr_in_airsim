@@ -18,7 +18,7 @@ This repository is home for the required packages and instructions to run VT&R i
 
 ## Repository Contents <a name="RepoContents"></a>
 
-This is a high-level overview of all the contents of this repository
+This is a high-level overview of all the contents of this repository.
 
 * `Plugins`  *a backup version of the Plugins folder with M600 Implementation folder required to run airsim with Unreal editor*
 * `airsim_vtr_interface` *a catkin package for interfacing airsim with VT&R*
