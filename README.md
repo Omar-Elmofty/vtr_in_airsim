@@ -124,6 +124,13 @@ cd ~AirSim/ros
 catkin build -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8
 ```
 
+If you encounter any issues in finding the directories of some of the dependencies, you could add the directories to the CMakeLists of each of the ros packages, examples below of some packages that needed their directory set. 
+```
+set(mavros_msgs_DIR "/opt/ros/kinetic/share/mavros_msgs/cmake") 
+set(geographic_msgs_DIR "/opt/ros/kinetic/share/geographic_msgs/cmake")
+set(uuid_msgs_DIR "/opt/ros/kinetic/share/uuid_msgs/cmake")
+```
+
 ## Setup Python Client <a name="SettingPython"></a>
 
 To setup the airsim python package run the following

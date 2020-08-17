@@ -8,62 +8,97 @@ The modified code is in the below forked repository:
 https://github.com/Omar-Elmofty/AirSim.git
 ```
 
-### Change to AirLib
+It is highly recommended that you compare the changes made to the unchanged codebase to understand the reasoning behind it
+
+## Changes to AirLib
 
 AirLib is the library containing all the drone modeling code. The library contains several firmwares (SimpleFlight, AruCopter & MavLink). ArduCopter and MavLink are meant for hardware in the loop testing with flight controllers. All the changes were made to the SimpleFlight firmware which originally made to fully simulate a quadcopter, hence the changes were mainly made so SimpleFlight can accept a HexaCopter model.
 
 
+#### `SimpleQuadXParams.hpp` 
 
-### `SimpleQuadXParams.hpp` in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight`:
-
-
-Changed 
-
-Changed a lot of the parameters
+Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight`
 
 
-`AirSimSimpleFlightBoard.hpp` under `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight`
-
-Line 70 (function getAvgMotorOutput), added two more motors (6 total)
-
-`Mixer.hpp` under `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight/firmware`
-
-Changed mixer matrix to include 6 motor outputs
+Changed `setupParams` function. Updated all the drone parameters to values that match the M600 (such as rotor_count, mass, arm_lengths .. etc), also used `initializeRotorHexX` rather than `initializeRotorQuadX` for initialization of rotors.
 
 
+####`Params.hpp` 
+
+Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight/firmware`
+
+Changed `motor_count`  in `struct Motor` to be 6 rather than 4
 
 
+#### `AirSimSimpleFlightBoard.hpp`
 
-`Params.hpp` under `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight/firmware`
+Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight`
 
-Change uint16_t motor_count = 6;
-
-
-`FlyingPawn.h` under`~/AirSim/Unreal/Plugins/AirSim/Source/Vehicles/Multirotor`
+Line 70 (function getAvgMotorOutput), added two more motors (6 total).
 
 
+#### `Mixer.hpp` 
+
+Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight/firmware`
+
+Changed the mixer matrix `mixerQuadX` to `mixerHexX`, increased its size to 6 and adjusted its values to mix the outputs of 6 motors rather than 4.
 
 
 
+## Other Changes outside AirLib
 
+#### `FlyingPawn.h`
 
-Add Z-rate function
+Located in `~/AirSim/Unreal/Plugins/AirSim/Source/Vehicles/Multirotor`
 
-`~/AirSim_Forked/AirLib/src/vehicles/multirotor/api` all files under there
-
-`~/AirSim_Forked/AirLib/include/vehicles/multirotor/api` - API base, and RPClib client
-
-`~/AirSim_Forked/AirLib/include/vehicles/multirotor/firmwares/mavlink/MavLinkMultirotorApi.hpp`
-`~/AirSim_Forked/AirLib/include/vehicles/multirotor/firmwares/arducopter/ArduCopterApi.hpp` 
-`~/AirSim_Forked/AirLib/include/vehicles/multirotor/firmwares/simple_flight/SimpleFlightApi.hpp`
+Changed `rotor_count` private variable to 6 rather than 4. This will help in rendering 6 motors rather than 4 in AirSim.
 
 
 
+## Changes to AirSim's API
 
-Also CMakeLists for ROS Wrapper
-
-
-client.py for python client
+In order to run AirSim with VT&R, AirSim must accept inputs in the form [roll, pitch, yaw_rate, z_rate]. There was no function readily available in the API to accept this set of inputs, hence a new function was created.
 
 
+#### client.py
+
+Located in `~/AirSim/PythonClient/airsim`
+
+Added `moveByRollPitchYawrateZAsync` function. 
+
+#### MultirotorApiBase.cpp
+
+Located in `~/AirSim/AirLib/src/vehicles/multirotor/api`
+
+Added functions `moveByRollPitchYawrateZrate` and `moveByRollPitchYawrateZrateInternal`
+
+#### MultirotorRpcLibClient.cpp
+
+Located in `~/AirSim/AirLib/src/vehicles/multirotor/api`
+
+Added Function `moveByRollPitchYawrateZrateAsync`
+
+#### MultirotorRpcLibServer.cpp
+
+Located in `~/AirSim/AirLib/src/vehicles/multirotor/api`
+
+Added Bind command for `moveByRollPitchYawrateZrate` function
+
+#### SimpleFlightApi.hpp
+
+Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight`
+
+Added `commandRollPitchYawrateZrate`, which has the `GoalMode` variable set to the required inputs [roll, pitch, yaw_rate, z_rate].
+
+#### MavLinkMultirotorApi.hpp
+
+Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/mavlink`
+
+Added `commandRollPitchYawrateZrate` Note that this function is incomplete, however it was just added to avoid errors during compiling.
+
+#### ArduCopterApi.hpp
+
+Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/arducopter` 
+
+Added `commandRollPitchYawrateZrate` function. 
 

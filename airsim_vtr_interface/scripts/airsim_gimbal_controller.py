@@ -15,7 +15,8 @@ from dji_osdk_ros.msg import Gimbal
 import tf
 import airsim
 
-class GimbalPub(object):
+class GimbalController(object):
+	#Class for implementing stereo gimbal
 	def __init__(self):
 
 		#Simulate Publishing the dji_sdk gimbal angle, and drone attitude
@@ -33,9 +34,9 @@ class GimbalPub(object):
 										Gimbal, self.gimbal_angle_cmd_cb)
 
 		#in rads, closeness threhold between cmd and actual
-		self.angle_threshold = rospy.get_param("/gimbal_pub/gimbal_angle_thres")
+		self.angle_threshold = rospy.get_param("/airsim_gimbal_controller/gimbal_angle_thres")
 		#gimbal motion speed in rad/s
-		self.angle_speed = rospy.get_param("/gimbal_pub/gimbal_angle_speed")
+		self.angle_speed = rospy.get_param("/airsim_gimbal_controller/gimbal_angle_speed")
 
 		# connect to the AirSim simulator
 		self.client = airsim.MultirotorClient()
@@ -66,6 +67,7 @@ class GimbalPub(object):
 		self.T_link_control = np.identity(4)
 		self.T_link_control[0:3,3] = np.array([0.0, 0.0, -0.04])
 
+		#Define T_rot which is equal to T_ctrl_ctrlFRD and T_sensor_sensorFRD
 		self.T_rot = np.array([[1, 0, 0 ,0],
 								  [0,-1, 0, 0],
 								  [0, 0,-1, 0],
@@ -213,8 +215,8 @@ class GimbalPub(object):
 			rate.sleep()
 
 if __name__ == '__main__':
-    rospy.init_node('gimbal_pub')
-    s =  GimbalPub()
+    rospy.init_node('airsim_gimbal_controller')
+    s =  GimbalController()
     s.gimbal_controller()
     rospy.spin()
 
