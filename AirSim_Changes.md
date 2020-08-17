@@ -57,43 +57,43 @@ Changed `rotor_count` private variable to 6 rather than 4. This will help in ren
 In order to run AirSim with VT&R, AirSim must accept inputs in the form [roll, pitch, yaw_rate, z_rate]. There was no function readily available in the API to accept this set of inputs, hence a new function was created.
 
 
-#### client.py
+#### `client.py`
 
 Located in `~/AirSim/PythonClient/airsim`
 
 Added `moveByRollPitchYawrateZrateAsync` function. 
 
-#### MultirotorApiBase.cpp
+#### `MultirotorApiBase.cpp`
 
 Located in `~/AirSim/AirLib/src/vehicles/multirotor/api`
 
 Added functions `moveByRollPitchYawrateZrate` and `moveByRollPitchYawrateZrateInternal`
 
-#### MultirotorRpcLibClient.cpp
+#### `MultirotorRpcLibClient.cpp`
 
 Located in `~/AirSim/AirLib/src/vehicles/multirotor/api`
 
 Added Function `moveByRollPitchYawrateZrateAsync`
 
-#### MultirotorRpcLibServer.cpp
+#### `MultirotorRpcLibServer.cpp`
 
 Located in `~/AirSim/AirLib/src/vehicles/multirotor/api`
 
 Added Bind command for `moveByRollPitchYawrateZrate` function
 
-#### SimpleFlightApi.hpp
+#### `SimpleFlightApi.hpp`
 
 Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight`
 
 Added `commandRollPitchYawrateZrate`, which has the `GoalMode` variable set to the required inputs [roll, pitch, yaw_rate, z_rate].
 
-#### MavLinkMultirotorApi.hpp
+#### `MavLinkMultirotorApi.hpp`
 
 Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/mavlink`
 
 Added `commandRollPitchYawrateZrate` Note that this function is incomplete, however it was just added to avoid errors during compiling.
 
-#### ArduCopterApi.hpp
+#### `ArduCopterApi.hpp`
 
 Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/arducopter` 
 
