@@ -201,6 +201,9 @@ cp ~/vtr_in_airsim/settings.json ~/Documents/AirSim
 
 The `settings.json` contains all the settings required by AirSim to load the drone and its sensors, the file you just copied contains basics needed to run VT&R, however a lot more customization could be applied to the drone. Check [AirSim Settings Documentation](https://microsoft.github.io/AirSim/settings/) for more details.
 
+
+The speed of the gimbal joints (in rad/s) in airsim can be changed in `airsim_interface.launch` in `airsim_vtr_interface` package if needed.
+
 ## Run VT&R in AirSim <a name="RunningVTR"></a>
 
 #### Step 1 - Load Environment:
