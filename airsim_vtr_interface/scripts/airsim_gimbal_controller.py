@@ -67,7 +67,7 @@ class GimbalController(object):
 		self.T_link_control = np.identity(4)
 		self.T_link_control[0:3,3] = np.array([0.0, 0.0, -0.04])
 
-		#Define T_rot which is equal to T_ctrl_ctrlFRD and T_sensor_sensorFRD
+		#Define T_rot, rotation from NWU to NED, or from FLU to FRD
 		self.T_rot = np.array([[1, 0, 0 ,0],
 								  [0,-1, 0, 0],
 								  [0, 0,-1, 0],
@@ -91,10 +91,6 @@ class GimbalController(object):
 	def publish_vehicle_attitude(self):
 		"""Function for publishing the vehicle attitude
 		"""
-		T_rot = np.array([[1, 0, 0 ,0],
-								  [0,-1, 0, 0],
-								  [0, 0,-1, 0],
-								  [0, 0, 0, 1]])
 
 		#get pose from airsim relative (NED -> FRD)
 		pose_NED_FRD = self.client.simGetVehiclePose(vehicle_name='drone')
@@ -108,8 +104,8 @@ class GimbalController(object):
 		#extract rotation matrix
 		R_NED_FRD = tf.transformations.quaternion_matrix([x,y,z,w])
 
-		#conver rotation to (NWU -> FLU)
-		R_NWU_FLU = T_rot.dot(R_NED_FRD).dot(T_rot)
+		#convert rotation to (NWU -> FLU)
+		R_NWU_FLU = self.T_rot.dot(R_NED_FRD).dot(self.T_rot)
 
 		#convert to quaternion
 		q_NWU_FLU = tf.transformations.quaternion_from_matrix(R_NWU_FLU)

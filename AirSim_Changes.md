@@ -1,18 +1,18 @@
 
 # AirSim Changes
 
-This document contains all the changes made to airsim's master branch available at `https://github.com/microsoft/AirSim.git`.
+This document contains all the changes made to AirSim's master branch available at `https://github.com/microsoft/AirSim.git`.
 The modified code is in the below forked repository:
 
 ```
 https://github.com/Omar-Elmofty/AirSim.git
 ```
 
-It is highly recommended that you compare the changes made to the unchanged codebase to understand the reasoning behind it
+It is highly recommended that you compare the changes made to the original AirSim code base to understand the reasoning behind it. 
 
 ## Changes to AirLib
 
-AirLib is the library containing all the drone modeling code. The library contains several firmwares (SimpleFlight, AruCopter & MavLink). ArduCopter and MavLink are meant for hardware in the loop testing with flight controllers. All the changes were made to the SimpleFlight firmware which originally made to fully simulate a quadcopter, hence the changes were mainly made so SimpleFlight can accept a HexaCopter model.
+AirLib is the library containing all the drone modeling code. The library contains several firmwares (SimpleFlight, AruCopter & MavLink). ArduCopter and MavLink are meant for hardware in the loop testing with flight controllers. All the changes were made to the SimpleFlight firmware which originally was made to fully simulate a quadcopter, hence the changes were made so SimpleFlight can accept a HexaCopter model.
 
 
 #### `SimpleQuadXParams.hpp` 
@@ -20,7 +20,7 @@ AirLib is the library containing all the drone modeling code. The library contai
 Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight`
 
 
-Changed `setupParams` function. Updated all the drone parameters to values that match the M600 (such as rotor_count, mass, arm_lengths .. etc), also used `initializeRotorHexX` rather than `initializeRotorQuadX` for initialization of rotors.
+Changes are in `setupParams` function. Updated all the drone parameters to values that match the M600 (such as rotor_count, mass, arm_lengths .. etc), also used `initializeRotorHexX` rather than `initializeRotorQuadX` for initialization of rotors.
 
 
 ####`Params.hpp` 
@@ -43,8 +43,6 @@ Located in `~/AirSim/AirLib/include/vehicles/multirotor/firmwares/simple_flight/
 
 Changed the mixer matrix `mixerQuadX` to `mixerHexX`, increased its size to 6 and adjusted its values to mix the outputs of 6 motors rather than 4.
 
-
-
 ## Other Changes outside AirLib
 
 #### `FlyingPawn.h`
@@ -52,7 +50,6 @@ Changed the mixer matrix `mixerQuadX` to `mixerHexX`, increased its size to 6 an
 Located in `~/AirSim/Unreal/Plugins/AirSim/Source/Vehicles/Multirotor`
 
 Changed `rotor_count` private variable to 6 rather than 4. This will help in rendering 6 motors rather than 4 in AirSim.
-
 
 
 ## Changes to AirSim's API
@@ -64,7 +61,7 @@ In order to run AirSim with VT&R, AirSim must accept inputs in the form [roll, p
 
 Located in `~/AirSim/PythonClient/airsim`
 
-Added `moveByRollPitchYawrateZAsync` function. 
+Added `moveByRollPitchYawrateZrateAsync` function. 
 
 #### MultirotorApiBase.cpp
 
