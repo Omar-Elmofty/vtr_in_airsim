@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 """
-AirSim Interface with VT&R
+Code for commanding Drone in AirSim and interfacing with VT&R
 
 """
 
@@ -21,8 +21,8 @@ from dji_osdk_ros.srv import SDKControlAuthority, SDKControlAuthorityResponse
 from dji_osdk_ros.msg import Gimbal
 
 
-class AirsimInterface(object):
-	#Class for AirSim & VT&R Interface
+class CommandDrone(object):
+	#Class for commanding drone in airsim, and interfacing with VT&R
 	def __init__(self):
 
 		#Simulate DJI sdk control authority service
@@ -276,7 +276,7 @@ class AirsimInterface(object):
 
 if __name__ == '__main__':
     # Initiate airsim interface node
-    rospy.init_node('airsim_interface')
-    inter = AirsimInterface()
+    rospy.init_node('airsim_command_drone')
+    inter = CommandDrone()
     inter.run_vtr()
     rospy.spin()

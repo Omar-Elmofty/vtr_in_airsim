@@ -38,6 +38,11 @@ class GimbalController(object):
 		#gimbal motion speed in rad/s
 		self.angle_speed = rospy.get_param("/airsim_gimbal_controller/gimbal_angle_speed")
 
+		#variables to store gimbal angle commands
+		self.pitch_cmd = rospy.get_param("/airsim_gimbal_controller/gimbal_initial_pitch")
+		self.roll_cmd = rospy.get_param("/airsim_gimbal_controller/gimbal_initial_roll")
+		self.yaw_cmd = rospy.get_param("/airsim_gimbal_controller/gimbal_initial_yaw")
+
 		# connect to the AirSim simulator
 		self.client = airsim.MultirotorClient()
 		self.client.confirmConnection()
@@ -48,11 +53,6 @@ class GimbalController(object):
 		self.pitch = 0.0
 		self.roll = 0.0
 		self.yaw = 0.0
-
-		#variables to store gimbal angle commands
-		self.pitch_cmd = 0.52
-		self.roll_cmd = 0.0
-		self.yaw_cmd = 0.0
 
 		#All fixed transforms for ronin gimbal
 		self.T_leftcamFRD_sensorFRD = np.identity(4)
