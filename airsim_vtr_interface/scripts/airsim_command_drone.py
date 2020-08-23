@@ -32,7 +32,7 @@ class CommandDrone(object):
 
 		#Subscribering to dji's control setpoint point 
 		self.sub_ctrl = rospy.Subscriber('/dji_sdk/flight_control_setpoint_generic', 
-										Joy, self.ctrl_cb)
+						Joy, self.ctrl_cb)
 		#Subscribe to vtr tracking status 
 		self.sub_nav = rospy.Subscriber('/ShamNav/out/tracker_status',
                                     TrackingStatus,
@@ -40,11 +40,11 @@ class CommandDrone(object):
 
 		#Simulate Display mode setting for M600
 		self.display_mode_pub = rospy.Publisher('/dji_sdk/display_mode', 
-													UInt8, queue_size=30)
+							UInt8, queue_size=30)
 
 		#Publish to gimbal angle cmd topic
 		self.gimbal_cmd_pub = rospy.Publisher('/dji_sdk/gimbal_angle_cmd', 
-										Gimbal, queue_size=30)
+							Gimbal, queue_size=30)
 
 
 		# connect to the AirSim simulator
@@ -78,7 +78,7 @@ class CommandDrone(object):
 		Tuned for DJI M600
 		"""
 		gains = airsim.AngleRateControllerGains(
-						roll_gains = airsim.PIDGains(kp=1.0, ki=0.0, kd=0.0),
+			roll_gains = airsim.PIDGains(kp=1.0, ki=0.0, kd=0.0),
                        pitch_gains = airsim.PIDGains(kp=1.0, ki=0.0, kd=0.0),
                        yaw_gains = airsim.PIDGains(kp=10.0, ki=0.0, kd=0.1))
 
@@ -90,7 +90,7 @@ class CommandDrone(object):
 		Tuned for DJI M600
 		"""
 		gains = airsim.AngleLevelControllerGains(
-						roll_gains = airsim.PIDGains(kp=2.0, ki=10.0, kd=0.1),
+			roll_gains = airsim.PIDGains(kp=2.0, ki=10.0, kd=0.1),
                        pitch_gains = airsim.PIDGains(kp=2.0, ki=10.0, kd=0.1),
                        yaw_gains = airsim.PIDGains(kp=2.0, ki=10.0, kd=0.1))
 
@@ -102,7 +102,7 @@ class CommandDrone(object):
 		Tuned for DJI M600
 		"""
 		gains = airsim.VelocityControllerGains(
-						x_gains = airsim.PIDGains(kp=0.2, ki=0.2, kd=0.0),
+			x_gains = airsim.PIDGains(kp=0.2, ki=0.2, kd=0.0),
                        y_gains = airsim.PIDGains(kp=0.2, ki=0.2, kd=0.0),
                        z_gains = airsim.PIDGains(kp=0.2, ki=2.0, kd=0.0))
 
@@ -114,7 +114,7 @@ class CommandDrone(object):
 		Tuned for DJI M600
 		"""
 		gains = airsim.PositionControllerGains(
-						x_gains = airsim.PIDGains(kp=0.002, ki=0.0, kd=0.001),
+			x_gains = airsim.PIDGains(kp=0.002, ki=0.0, kd=0.001),
                        y_gains = airsim.PIDGains(kp=0.002, ki=0.0, kd=0.001),
                        z_gains = airsim.PIDGains(kp=0.1, ki=0.0, kd=0.1))
 
@@ -221,7 +221,7 @@ class CommandDrone(object):
 			vy = speed*np.sin(ang) #velocity in y
 
 			self.client.moveByVelocityAsync(vx, vy, 0, 1/50.0, 
-							yaw_mode=airsim.YawMode(True,yaw_rate))
+				yaw_mode=airsim.YawMode(True,yaw_rate))
 
 			if ang < arc_angle:
 				# increment angle, divide by Freq and multipy by sim speed
@@ -250,10 +250,10 @@ class CommandDrone(object):
 
 			#move according to commands from vt&r
 			self.client.moveByRollPitchYawrateZrateAsync(self.roll, 
-															self.pitch, 
-															self.yaw_rate, 
-															self.z_rate, 
-															float(1.0/50.0))
+								self.pitch, 
+								self.yaw_rate, 
+								self.z_rate, 
+								float(1.0/50.0))
 
 			#Hover when reach end of path
 			if self.state == "::Hover::MetricLocalize":
