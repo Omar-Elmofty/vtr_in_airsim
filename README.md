@@ -248,6 +248,7 @@ cp ~/vtr_in_airsim/stereo.yaml ~/charlottetown/utiasASRL/vtr2/build/deps/robochu
 
 Finally, you'll have to copy the `settings.json` file in this repo to your Documents folder 
 ```
+mkdir ~/Documents/AirSim
 cp ~/vtr_in_airsim/settings.json ~/Documents/AirSim
 ```
 
