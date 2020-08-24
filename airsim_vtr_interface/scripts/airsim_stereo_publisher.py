@@ -80,7 +80,7 @@ class StereoPublisher(object):
 		self.right_info_msg.D = [0.0, 0.0, 0.0,0.0,0.0]
 		self.right_info_msg.R = [1.0, 0.0, 0.0,0.0,1.0, 0.0, 0.0, 0.0, 1.0]
 		self.right_info_msg.P = [336.0, 0.0, 336.0, -336.0*0.12, 0.0, 336.0, 
-											188.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+					188.0, 0.0, 0.0, 0.0, 1.0, 0.0]
 		self.right_info_pub.publish(self.right_info_msg)
 
 		#publish left cam info

@@ -27,11 +27,11 @@ class GimbalController(object):
 
 		#Simulate activation service for dji sdk
 		self.activation_srv = rospy.Service('/dji_sdk/activation',Activation, 
-											self.activation_cb)
+						self.activation_cb)
 
 		#Subscribe to gimbal angle cmd topic
 		self.gimbal_cmd_sub = rospy.Subscriber('/dji_sdk/gimbal_angle_cmd', 
-										Gimbal, self.gimbal_angle_cmd_cb)
+						Gimbal, self.gimbal_angle_cmd_cb)
 
 		#in rads, closeness threhold between cmd and actual
 		self.angle_threshold = rospy.get_param("/airsim_gimbal_controller/gimbal_angle_thres")
@@ -69,9 +69,9 @@ class GimbalController(object):
 
 		#Define T_rot, rotation from NWU to NED, or from FLU to FRD
 		self.T_rot = np.array([[1, 0, 0 ,0],
-								  [0,-1, 0, 0],
-								  [0, 0,-1, 0],
-								  [0, 0, 0, 1]])
+					[0,-1, 0, 0],
+					[0, 0,-1, 0],
+					[0, 0, 0, 1]])
 
 
 	def activation_cb(self,msg):
@@ -150,28 +150,28 @@ class GimbalController(object):
 
 			#Calculate roll pitch yaw rotation matrices
 			T_pitch_roll = np.array([[np.cos(self.pitch),0,np.sin(self.pitch),0.16],
-									 [0,1,0,0.11],
-									 [-np.sin(self.pitch),0, np.cos(self.pitch),0],
-									 [0,0,0,1]])
+						[0,1,0,0.11],
+						[-np.sin(self.pitch),0, np.cos(self.pitch),0],
+						[0,0,0,1]])
 
 			T_roll_yaw = np.array([[1,0,0,-0.087],
-								   [0,np.cos(self.roll),-np.sin(self.roll),0],
-								   [0,np.sin(self.roll),np.cos(self.roll),-0.2],
-								   [0,0,0,1]])
+						[0,np.cos(self.roll),-np.sin(self.roll),0],
+						[0,np.sin(self.roll),np.cos(self.roll),-0.2],
+						[0,0,0,1]])
 
 			T_yaw_link = np.array([[np.cos(self.yaw), -np.sin(self.yaw), 0, 0],
-								   [np.sin(self.yaw), np.cos(self.yaw), 0, 0],
-								   [0,0,1,-0.021],
-								   [0,0,0,1]])
+						[np.sin(self.yaw), np.cos(self.yaw), 0, 0],
+						[0,0,1,-0.021],
+						[0,0,0,1]])
 			
 			#Calculate camera poses relative to control frame
 			T_sensorFRD_ctrlFRD = self.T_rot.dot(self.T_link_control) \
 					.dot(T_yaw_link).dot(T_roll_yaw).dot(T_pitch_roll) \
 					.dot(self.T_sensor_pitch).dot(self.T_rot)
 			T_leftcamFRD_ctrlFRD = T_sensorFRD_ctrlFRD \
-									.dot(self.T_leftcamFRD_sensorFRD)
+						.dot(self.T_leftcamFRD_sensorFRD)
 			T_rightcamFRD_ctrlFRD = T_sensorFRD_ctrlFRD \
-									.dot(self.T_rightcamFRD_sensorFRD)
+						.dot(self.T_rightcamFRD_sensorFRD)
 
 			#Convert rotations to euler
 			left_euler = tf.transformations.euler_from_matrix(T_leftcamFRD_ctrlFRD,'ryxz')
@@ -181,18 +181,18 @@ class GimbalController(object):
 
 			#Send camera poses to airsim
 			camera_pose = airsim.Pose(airsim.Vector3r(left_trans[0], 
-													left_trans[1],
-													left_trans[2]),
-											airsim.to_quaternion(left_euler[0],
-																left_euler[1] , 
-																left_euler[2]))
+								left_trans[1],
+								left_trans[2]),
+								airsim.to_quaternion(left_euler[0],
+								left_euler[1] , 
+								left_euler[2]))
 			self.client.simSetCameraPose("front_left_custom", camera_pose)
 			camera_pose = airsim.Pose(airsim.Vector3r(right_trans[0], 
-													right_trans[1],
-													right_trans[2]), 
-											airsim.to_quaternion(right_euler[0],
-																right_euler[1] , 
-																right_euler[2]))
+								right_trans[1],
+								right_trans[2]), 
+								airsim.to_quaternion(right_euler[0],
+								right_euler[1] , 
+								right_euler[2]))
 			self.client.simSetCameraPose("front_right_custom", camera_pose)
 
 			#publish vehicle attitude
