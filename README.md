@@ -202,6 +202,10 @@ Navigate to the "Config" folder in your project, and open `DefaultEngine.ini`, a
 
 In order to avoid Unreal Engine from dropping in performance while running VT&R, ensure it can run in the background. Go to "Edit -> Editor Preferences"; in the "Search" box, type "CPU" and ensure that the **"Use Less CPU when in Background"** is **unchecked**. If this step is not completed, the camera frame rate might drop significantly while Unreal Editor is running in the background, which will create issues while running VT&R. 
 
+#### Step 8 - Rebuild Lighting if needed
+
+When downloading some environments, you might get an error saying that "Lighting needs to be re-built". If you get that error, click the Build drop down menu on the main toolbar and click "Build Lighting only".
+
 
 ## Install AirSim Interface <a name="AirSimInterface"></a>
 
@@ -274,6 +278,27 @@ Open `airsim_interface.launch` in `airsim_vtr_interface`, adjust the ros paramet
 #### 5. Adjust drone's PID gains (if needed)
 
 To edit all the pid gains for the drone, open `airsim_command_drone.py` in `airsim_vtr_interface` package, and adjust the gains in functions `update_anglerate_gains`, `update_angle_gains`, `update_velocity_gains`, and `update_position_gains`. Note that the gains are already tuned for the DJI M600. 
+
+#### 6. Change your data directory (where graph is stored)
+
+Open `m600_backyard.yaml` under `~/charlottetown/utiasASRL/vtr2/src/asrl__navigation/param/scenarios` and change the `data_dir` field to a suitable one.
+
+Open `vtr_m600_airsim.yaml` under `~/vtr_in_airsim/tmuxp` and change the data directory (on line 34) to be the same one you added before. This step will make sure that the directory is emptied out before running vt&r, if you don't want the directory to be emptied out, comment out this line in `vtr_m600_airsim.yaml`. 
+
+#### 7. Set the simulation speed
+
+The desired image publishing rate from AirSim is 15 Hz, to simulate the output from the ZED camera used on the M600. In order to ensure you get such a frequency on the hardware you have, you might need to slow down the simulation. First you should check any publishing rate of any of the camera topics using the below command once you launch the airsim interface (steps explained in the following section):
+
+```
+rostopic hz /airsim_node/drone/front_left_custom/Scene
+```
+This command will give you the publishing rate of images from AirSim. Let's say this publishing rate is 5 Hz (which is lower than 15 Hz), then the simulation speed should be set to 0.3, hence the resulting images published per a simulation second will be 15. To change simulation speed, open `settings.json` and change the field "ClockSpeed".
+
+
+#### 8. **Very Important** Scale the Return Speed using the simulation speed
+
+If the simulation speed (which is set in settings.json) is not set to 1. Then the return speed which is set in  `dji_baseline_path_tracker.yaml` under `~/charlottetown/utiasASRL/vtr2/src/asrl__path_tracker/params` will need to be scaled accordingly. For example if the simulation speed is set to 0.25, and if the desired return speed is 2m/s, then the speed set in `dji_baseline_path_tracker.yaml` must be 0.5 m/s (2 x 0.25). This will results in the vehicle moving at 2 m/s in AirSim.  That's because the AirSim Simulator clock will be running 4 times slower than the VT&R clock, hence the VT&R follow speed will have to be scaled down to cope with the slow AirSim clock. 
+
 
 ## Run VT&R in AirSim <a name="RunningVTR"></a>
 
