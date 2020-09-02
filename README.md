@@ -287,7 +287,7 @@ Open `vtr_m600_airsim.yaml` under `~/vtr_in_airsim/tmuxp` and change the data di
 
 #### 7. Set the simulation speed
 
-The desired image publishing rate from AirSim is 15 Hz, to simulate the output from the ZED camera used on the M600. In order to ensure you get such a frequency on the hardware you have, you might need to slow down the simulation. First you should check any publishing rate of any of the camera topics using the below command once you launch the airsim interface (steps explained in the following section):
+The desired image publishing rate from AirSim is 15 Hz, to simulate the output from the ZED camera used on the M600. In order to ensure you get such a frequency on the hardware you have, you might need to slow down the simulation. First you should check the publishing rate of any of the camera topics using the below command once you launch the AirSim interface (steps on how to launch it are explained in the following section):
 
 ```
 rostopic hz /airsim_node/drone/front_left_custom/Scene
